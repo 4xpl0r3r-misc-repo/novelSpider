@@ -44,7 +44,9 @@ def main():
 		iSpider.urlManager.addUrls(data[0])
 		iSpider.htmlOutputer.collectData(data[1])
 
+	print("[info]","数据导出中...")
 	iSpider.htmlOutputer.outputData()
+	print("[info]","数据导出完成")
 
 if __name__=='__main__':
 	print("[info]","开始运行")
