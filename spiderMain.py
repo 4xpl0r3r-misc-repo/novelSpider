@@ -22,7 +22,7 @@ class Spider:
 def main():
 	iSpider=Spider()
 	count = 1
-	while count<=50:
+	while count<=int(sys.argv[2]):
 		print(count)
 		if(not iSpider.urlManager.hasNewUrl()):
 			break
