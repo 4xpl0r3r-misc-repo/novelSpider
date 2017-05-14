@@ -1,20 +1,35 @@
 # -*- coding: utf-8 -*-
 
-import urllib.request
+import requests,logging,asyncio
+from multiprocessing import Queue
 
 class htmlDownloader:
-	def download(self,url):
-		if url is None:
-			return
+	def __init__(self):
+		self.count=0
+		self.session=requests.Session()
+		self.tRes=None
+		self.eventLoop=asyncio.get_event_loop()
+		self.tRes=Queue()
+
+	def download(self,urls,mode=0):#0为全部，其它则指定长度
+		self.tRes=Queue()
+		if not mode:
+			tasks=[self.in_download(urls.get()) for i in range(urls.qsize())]
 		else:
-			try:
-				print("[info]","开始下载:%s"%url)
-				response=urllib.request.urlopen(url)
-				if response.getcode()==200:
-					return response.read()
-				else:
-					raise downloadError("下载失败，状态码为:%d",response.getcode())
-			except Exception as e:
-				print("[error]","下载发生异常:%s\n\t异常信息如下:"%url)
-				print('\t',e)
-				return False
+			tasks=[self.in_download(urls.get()) for i in range(mode)]
+		logging.debug(len(tasks))
+		self.eventLoop.run_until_complete(asyncio.wait(tasks))
+
+	async def in_download(self,url):
+		logging.info("开始下载:%s"%url)
+		response=self.session.get(url)
+		response.raise_for_status()
+		response.encoding='utf-8'
+		self.tRes.put((url,response.text))
+
+	def singleDownload(self,url):
+		logging.info("开始下载:%s"%url)
+		response=self.session.get(url)
+		response.raise_for_status()
+		response.encoding='utf-8'
+		return response.text

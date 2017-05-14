@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
+import logging
 
 class htmlOutputer:
 	def __init__(self):
 		self.datas=[]
+		self.counter=0
 
 	def collectData(self,data):
-		if data is None:
-			return
 		self.datas.append(data)
+		self.counter=self.counter+1
 
 	def outputData(self):
 		fout=open('out.html','w',encoding='utf-8')
 		fout.write('<html>')
-		fout.write(r"<meta charset='utf-8'>")
+		fout.write("<meta charset='utf-8'>")
 		fout.write('<title>Spider数据输出</title>')
 		fout.write('<body>')
 		fout.write('<table>')
