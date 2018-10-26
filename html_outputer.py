@@ -1,28 +1,33 @@
 # -*- coding: utf-8 -*-
 
 class htmlOutputer:
-	def __init__(self):
-		self.datas=[]
 
-	def collectData(self,data):
-		if data is None:
-			return
-		self.datas.append(data)
-
-	def outputData(self):
-		fout=open('out.html','w',encoding='utf-8')
+	def outputData(self,count,datas):
+		filename=str(count)+'.htm'
+		fout=open(filename,'w',encoding='utf-8')
 		fout.write('<html>')
 		fout.write(r"<meta charset='utf-8'>")
-		fout.write('<title>Spider数据输出</title>')
+		fout.write('<title>'+datas['title']+'</title>')
+		fout.write(r'<link href="./style.css" rel="stylesheet" type="text/css" /> ')
 		fout.write('<body>')
-		fout.write('<table>')
-		for data in self.datas:
-			fout.write('<tr>')
-			fout.write('<td><a href="%s">'%data['url'])
-			fout.write("%s</a></td>"%data['title'])
-			fout.write("<td>%s</td>"%data['summary'])
-			fout.write('</tr>')
-		fout.write('</table>')
+		if count>1:
+			fout.write(r'<a href="'+str(count-1)+'.htm'+r'">上一章</a>')
+		fout.write(r'<h3>'+datas['title']+r'</h3>')
+		fout.write(r'<p>'+datas['text']+r'</p>')
+		fout.write(r'<a href="'+str(count+1)+'.htm'+r'">下一章</a>')
+		fout.write('</body>')
+		fout.write('</html>')
+		fout.close()
+
+	def outputFinalData(self,count):
+		filename=str(count)+'.htm'
+		fout=open(filename,'w',encoding='utf-8')
+		fout.write('<html>')
+		fout.write(r"<meta charset='utf-8'>")
+		fout.write('<title>看完啦</title>')
+		fout.write(r'<link href="./style.css" rel="stylesheet" type="text/css" /> ')
+		fout.write('<body>')
+		fout.write('看完啦~')
 		fout.write('</body>')
 		fout.write('</html>')
 		fout.close()
